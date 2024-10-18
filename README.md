@@ -1,1 +1,1 @@
-# ecosystem-birmingham
+# Ecosystem-birmingham
