@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Startup Ecosystem Partition Chart</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Tooltip styling using Tailwind's @apply directive */
+        .tooltip {
+            @apply absolute text-center p-2 text-sm bg-blue-100 border border-gray-300 rounded shadow-lg pointer-events-none opacity-0 transition-opacity duration-300;
+        }
+
+        /* Ensure the chart container maintains a square aspect ratio */
+        #chart {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Position the SVG absolutely within the container */
+        #chart svg {
+            margin: 0 auto;
+        }
+    </style>
+        <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body class="bg-gray-100 text-gray-800  h-screen flex items-center justify-center">
+    <div class="w-full flex">
+
+        <div class="mx-auto p-4 w-4/12 flex justify-center flex-col rotating-bg">
+            <h1 class="text-3xl font-bold text-center mb-6 text-white shadow-md">Birmingham Ecosystem Chart</h1>
+            <div class="flex justify-center space-x-4 mb-4">
+                <a href="table.html"
+                class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-lg">
+                 View Table
+             </a>
+            </div>
+            <div class="tooltip justify-center self-center" id="tooltip"></div>
+        </div>
+
+        <div class="w-9/12 items-center justify-center h-screen m-auto flex flex-col bg-gray-100">
+            <div id="chart" class="w-full m-auto mt-20 h-fit">
+            </div>
+        </div>
+
+    </div>
+    <script src="chart.js"></script>
+</body>
+
+</html>

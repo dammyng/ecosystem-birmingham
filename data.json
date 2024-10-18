@@ -1,0 +1,345 @@
+{
+    "name": "Startup Ecosystem",
+    "children": [
+        {
+            "name": "Startups",
+            "children": [
+                {
+                    "name": "Fintech",
+                    "children": [
+                        {
+                            "name": "Monzo",
+                            "value": 50,
+                            "description": "Early-Stage Fintech Startup: Provides consumer banking and financial services"
+                        },
+                        {
+                            "name": "Revolut",
+                            "value": 80,
+                            "description": "Growth-Stage Fintech Startup: Offers banking, exchange, and financial products globally"
+                        }
+                    ]
+                },
+                {
+                    "name": "Health Tech",
+                    "children": [
+                        {
+                            "name": "Babylon Health",
+                            "value": 60,
+                            "description": "Growth-Stage Health Tech Startup: Focuses on AI-driven healthcare services"
+                        }
+                    ]
+                },
+                {
+                    "name": "Artificial Intelligence",
+                    "children": [
+                        {
+                            "name": "DeepMind",
+                            "value": 100,
+                            "description": "Acquired AI Startup: Focuses on AI research and development, now part of Google"
+                        }
+                    ]
+                },
+                {
+                    "name": "Early-Stage Startups",
+                    "children": [
+                        {
+                            "name": "Monzo",
+                            "value": 50,
+                            "description": "Received seed funding, scaling rapidly with Series B funding"
+                        }
+                    ]
+                },
+                {
+                    "name": "Growth-Stage Startups",
+                    "children": [
+                        {
+                            "name": "Revolut",
+                            "value": 80,
+                            "description": "Post-Series C, expanding globally and diversifying products"
+                        }
+                    ]
+                },
+                {
+                    "name": "Acquired/Exited Startups",
+                    "children": [
+                        {
+                            "name": "DeepMind",
+                            "value": 100,
+                            "description": "Acquired by Google for its AI capabilities"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Investors",
+            "children": [
+                {
+                    "name": "Venture Capital Firms",
+                    "children": [
+                        {
+                            "name": "Seedcamp",
+                            "value": 70,
+                            "description": "Early-Stage VC: Focuses on seed investments, providing funding and mentorship"
+                        },
+                        {
+                            "name": "Index Ventures",
+                            "value": 90,
+                            "description": "Growth-Stage VC: Invests in scaling startups with proven business models"
+                        }
+                    ]
+                },
+                {
+                    "name": "Angel Investors",
+                    "children": [
+                        {
+                            "name": "Brent Hoberman",
+                            "value": 40,
+                            "description": "Angel Investor: Serial entrepreneur investing in early-stage tech startups"
+                        }
+                    ]
+                },
+                {
+                    "name": "Private Equity Firms",
+                    "children": [
+                        {
+                            "name": "Warburg Pincus",
+                            "value": 110,
+                            "description": "PE Firm: Focuses on late-stage companies with established markets"
+                        }
+                    ]
+                },
+                {
+                    "name": "Seed Investors",
+                    "children": [
+                        {
+                            "name": "Seedcamp",
+                            "value": 70,
+                            "description": "Focuses on seed rounds for tech startups, offers small initial capital"
+                        },
+                        {
+                            "name": "Techstars",
+                            "value": 60,
+                            "description": "Provides seed funding through its accelerator program"
+                        }
+                    ]
+                },
+                {
+                    "name": "Early-Stage Investors",
+                    "children": [
+                        {
+                            "name": "Index Ventures",
+                            "value": 90,
+                            "description": "Primarily Series A and B rounds for scaling startups"
+                        }
+                    ]
+                },
+                {
+                    "name": "Growth-Stage Investors",
+                    "children": [
+                        {
+                            "name": "Balderton Capital",
+                            "value": 100,
+                            "description": "Focuses on later-stage funding for companies looking to expand globally"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Accelerators & Incubators",
+            "children": [
+                {
+                    "name": "Fintech",
+                    "children": [
+                        {
+                            "name": "Level39",
+                            "value": 50,
+                            "description": "Fintech-focused accelerator: Offers workspace and mentorship for early-stage fintech startups"
+                        }
+                    ]
+                },
+                {
+                    "name": "General Tech",
+                    "children": [
+                        {
+                            "name": "Techstars",
+                            "value": 60,
+                            "description": "Multi-sector accelerator: Provides seed funding and a structured 3-month mentorship program"
+                        }
+                    ]
+                },
+                {
+                    "name": "Health Tech",
+                    "children": [
+                        {
+                            "name": "Digital Health London Accelerator",
+                            "value": 55,
+                            "description": "Focuses on healthcare startups: Provides support for startups transforming healthcare delivery"
+                        }
+                    ]
+                },
+                {
+                    "name": "Accelerators",
+                    "children": [
+                        {
+                            "name": "Techstars",
+                            "value": 60,
+                            "description": "Offers 3-month intensive programs to help startups rapidly scale"
+                        }
+                    ]
+                },
+                {
+                    "name": "Incubators",
+                    "children": [
+                        {
+                            "name": "London Co-Investment Fund",
+                            "value": 45,
+                            "description": "Supports very early-stage startups with capital and resources"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Coworking Spaces",
+            "children": [
+                {
+                    "name": "Central London",
+                    "children": [
+                        {
+                            "name": "WeWork",
+                            "value": 70,
+                            "description": "Flexible office space provider: Offers workspace, networking opportunities, and event hosting for startups"
+                        }
+                    ]
+                },
+                {
+                    "name": "Shoreditch/Old Street",
+                    "children": [
+                        {
+                            "name": "Huckletree",
+                            "value": 65,
+                            "description": "Focused on tech and creative startups, offering community-driven spaces"
+                        }
+                    ]
+                },
+                {
+                    "name": "General Services",
+                    "children": [
+                        {
+                            "name": "WeWork",
+                            "value": 70,
+                            "description": "Provides flexible workspace, meeting rooms, and networking events"
+                        }
+                    ]
+                },
+                {
+                    "name": "Specialized Services",
+                    "children": [
+                        {
+                            "name": "Plexal",
+                            "value": 80,
+                            "description": "Tech hub focused on cyber security and IoT: Provides innovation workshops, access to partners, and accelerator programs"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Universities & Research Centers",
+            "children": [
+                {
+                    "name": "Artificial Intelligence",
+                    "children": [
+                        {
+                            "name": "Imperial College London",
+                            "value": 85,
+                            "description": "Focuses on AI and machine learning: Collaborates with startups on AI research"
+                        }
+                    ]
+                },
+                {
+                    "name": "Life Sciences",
+                    "children": [
+                        {
+                            "name": "King's College London",
+                            "value": 75,
+                            "description": "Focuses on biotechnology and healthcare: Supports research and startups in life sciences"
+                        }
+                    ]
+                },
+                {
+                    "name": "University Spin-offs",
+                    "children": [
+                        {
+                            "name": "Imperial Innovations",
+                            "value": 80,
+                            "description": "Imperial College's incubator, responsible for launching tech and medtech startups"
+                        },
+                        {
+                            "name": "UCL Innovation & Enterprise",
+                            "value": 70,
+                            "description": "Helps UCL researchers commercialize their ideas and create startups"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Events & Meetups",
+            "children": [
+                {
+                    "name": "Tech Conferences",
+                    "children": [
+                        {
+                            "name": "London Tech Week",
+                            "value": 90,
+                            "description": "Annual event bringing together tech startups, investors, and corporates to discuss trends and innovations"
+                        }
+                    ]
+                },
+                {
+                    "name": "Pitch Competitions",
+                    "children": [
+                        {
+                            "name": "Seedcamp Week",
+                            "value": 80,
+                            "description": "Event where early-stage startups pitch to a panel of investors and mentors"
+                        }
+                    ]
+                },
+                {
+                    "name": "Meetups",
+                    "children": [
+                        {
+                            "name": "Fintech Meetup",
+                            "value": 60,
+                            "description": "Monthly networking event for fintech startups, investors, and industry professionals"
+                        }
+                    ]
+                },
+                {
+                    "name": "Fintech",
+                    "children": [
+                        {
+                            "name": "Fintech Week London",
+                            "value": 85,
+                            "description": "Sector-specific event for fintech startups to connect with industry leaders and investors"
+                        }
+                    ]
+                },
+                {
+                    "name": "Health Tech",
+                    "children": [
+                        {
+                            "name": "HealthTechX",
+                            "value": 75,
+                            "description": "Showcase and networking event for health tech startups and healthcare professionals"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

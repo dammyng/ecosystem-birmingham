@@ -1,0 +1,122 @@
+/* styles.css */
+
+
+/* Ensure the chart container maintains a square aspect ratio */
+#chart-container {
+    position: relative;
+    width: 100%;
+    padding-top: 100%; /* 1:1 Aspect Ratio */
+    max-width: 1000px; /* Match the SVG viewBox size */
+    margin: 0 auto; /* Center the container */
+}
+
+/* Position the SVG absolutely within the container */
+#chart-container svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Table Container Styling */
+#table-container {
+    overflow-x: auto; /* Enable horizontal scroll on small screens */
+}
+
+/* Optional: Fixed header for table */
+.table-fixed thead tr th {
+    position: sticky;
+    top: 0;
+    background-color: #f8fafc; /* Tailwind's bg-gray-50 */
+    z-index: 1;
+}
+
+@media (max-width: 640px) {
+    .legend {
+        transform: translate(0, -radius - 50); /* Adjust as needed */
+    }
+}
+
+.tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    background: rgba(59, 130, 246, 0.9); /* Tailwind blue-500 with opacity */
+    color: white;
+    border-radius: 0.375rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Define the keyframe animation for rotating background */
+@keyframes rotateBackground {
+    0% {
+        background-image: url('bgop1.avif');
+    }
+    25% {
+        background-image: url('bgop2.avif');
+    }
+    50% {
+        background-image: url('bgop3.avif');
+    }
+    75% {
+        background-image: url('bgop4.avif');
+    }
+    100% {
+        background-image: url('bgop1.avif');
+    }
+}
+
+/* Apply the rotating background animation */
+.rotating-bg {
+    position: relative;
+    animation: rotateBackground 20s infinite ease-in-out; /* 20s duration, infinite loop */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Darker overlay for better text readability */
+.rotating-bg::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Increased opacity to 60% */
+    z-index: 1;
+}
+
+/* Ensure the content is above the overlay */
+.rotating-bg * {
+    position: relative;
+    z-index: 2; /* Ensure the content stays on top of the overlay */
+}
+
+/* Apply the rotating background animation */
+.rotating-bg2 {
+    animation: rotateBackground 20s infinite ease-in-out; /* 20s duration, infinite loop */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Darker overlay for better text readability */
+.rotating-bg2::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Increased opacity to 60% */
+    z-index: 1;
+}
+
+/* Ensure the content is above the overlay */
+.rotating-bg2 * {
+    position: relative;
+    z-index: 2; /* Ensure the content stays on top of the overlay */
+}
