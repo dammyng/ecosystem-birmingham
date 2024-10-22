@@ -1,5 +1,173 @@
 // chart.js
 
+
+const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8RZbr9wf1Z1U8r2ThApsH_QxPGoWODapgxsjUjs1TLKRKtDEZznKyPIZjvwhomePhXIpmapUaK9K5/pub?output=csv';
+
+function fetchCSVAsJSON(csvUrl) {
+    return fetch(csvUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(csvText => {
+            // Parse the CSV into an array of objects
+            const rows = csvText.split('\n').filter(row => row.trim().length > 0); // Filter out empty rows
+            const headers = rows[0].split(',').map(header => header.trim());
+
+            // Convert CSV rows into JSON format
+            const jsonData = rows.slice(1).map(row => {
+                const values = row.split(',').map(value => value.trim());
+                const obj = {};
+                headers.forEach((header, i) => {
+                    obj[header] = values[i];
+                });
+                return obj;
+            });
+
+            return jsonData;
+        })
+        .catch(error => {
+            console.error('Error fetching or parsing CSV:', error);
+            return []; // Return an empty array in case of an error
+        });
+}
+
+function transformData(data) {
+    // Create the root object
+    const root = {
+        name: "Startup Ecosystem",
+        children: []
+    };
+
+    // Helper function to find or create a node at a specific level
+    function findOrCreateNode(parent, nodeName) {
+        let node = parent.children.find(child => child.name === nodeName);
+        if (!node) {
+            node = {
+                name: nodeName,
+                children: []
+            };
+            parent.children.push(node);
+        }
+        return node;
+    }
+
+    // Iterate through each item in the input data array
+    data.forEach(item => {
+        // Find or create each level of the hierarchy
+        const level1 = findOrCreateNode(root, item.name || "Startups");
+        const level2 = findOrCreateNode(level1, item.children__name || "Investors");
+        const level3 = findOrCreateNode(level2, item.children__children__name || "Category");
+        
+        // Create the leaf node
+        const leaf = {
+            name: item.children__children__children__name,
+            value: Number(item.children__children__children__value),
+            description: item.children__children__children__description.replace(/"/g, "")
+        };
+
+        // Add the leaf node to level 3
+        level3.children.push(leaf);
+    });
+
+    return root;
+}
+
+function buildHierarchy(flatData) {
+    const root = {};
+
+    flatData.forEach(item => {
+        let currentLevel = root;
+
+        // Extract the hierarchy path for the current item
+        const entries = Object.entries(item).filter(([key, value]) => value !== "");
+
+        // Build the hierarchy for the current item
+        entries.forEach(([fullKey, value]) => {
+            const keys = fullKey.split('__');
+            let obj = currentLevel;
+
+            keys.forEach((key, index) => {
+                const isLast = index === keys.length - 1;
+                const nextKey = keys[index + 1];
+
+                // Handle 'children' as arrays
+                if (key === 'children') {
+                    if (!obj[key]) obj[key] = [];
+                    // Find existing child with the same name
+                    let childNameKey = keys.slice(0, index + 2).join('__') + '__name';
+                    let childName = item[childNameKey];
+
+                    // For top-level 'children', use the 'name' key from the current object if 'childName' is undefined
+                    if (!childName && item['name']) childName = item['name'];
+
+                    // If name is still undefined, skip this iteration
+                    if (!childName) return;
+
+                    let child = obj[key].find(c => c.name === childName);
+                    if (!child) {
+                        child = { name: childName };
+                        obj[key].push(child);
+                    }
+                    obj = child;
+                } else {
+                    // Assign value to the last key
+                    if (isLast) {
+                        obj[key] = value;
+                    } else {
+                        if (!obj[key]) obj[key] = {};
+                        obj = obj[key];
+                    }
+                }
+            });
+        });
+    });
+
+    return root;
+}
+
+function transformImprovedData(data) {
+    // Create the root object
+    const root = {
+        name: "Startup Ecosystem",
+        children: []
+    };
+
+    // Helper function to find or create a node at a specific level
+    function findOrCreateNode(parent, nodeName) {
+        let node = parent.children.find(child => child.name === nodeName);
+        if (!node) {
+            node = {
+                name: nodeName,
+                children: []
+            };
+            parent.children.push(node);
+        }
+        return node;
+    }
+
+    // Iterate through each item in the input data array
+    data.forEach(item => {
+        // Find or create each level of the hierarchy
+        const level1 = findOrCreateNode(root, item.category);
+        const level2 = findOrCreateNode(level1, item.subcategory);
+
+        // Create the leaf node
+        const leaf = {
+            name: item.name,
+            value: Number(item.value),
+            description: item.description
+        };
+
+        // Add the leaf node to level 2
+        level2.children.push(leaf);
+    });
+
+    return root;
+}
+
 // Immediately Invoked Function Expression (IIFE) to avoid polluting the global namespace
 (function () {
     // Chart Dimensions
@@ -17,7 +185,15 @@
     const tooltip = d3.select(".tooltip");
 
     // Load the external data
-    d3.json("data.json").then(data => {
+    fetchCSVAsJSON(csvUrl).then(res => {
+        console.log('Fetched JSON Data:', res);
+
+        //const data = buildHierarchy(res)
+        //const data = transformData(res)
+        const data = transformImprovedData(res)
+        console.log('Fetched as a single object :', data);
+
+       //fetchCSVAsJSON(csvUrl).then
         // Utility function to get maximum number of children at any level
         function getMaxChildren(data) {
             let max = 0;
@@ -87,8 +263,8 @@
                 .duration(200)
                 .style("opacity", .9);
             tooltip.html(`<strong>${d.data.name}</strong><br>${d.data.description || ''}`)
-                //.style("left", (event.pageX + 10) + "px")
-                //.style("top", (event.pageY - 28) + "px");
+            //.style("left", (event.pageX + 10) + "px")
+            //.style("top", (event.pageY - 28) + "px");
         }
 
         function hideTooltip() {
@@ -129,8 +305,8 @@
                 .duration(200)
                 .style("opacity", .9);
             tooltip.html(`<strong>Startup Ecosystem</strong>`)
-                //.style("left", (d3.event.pageX + 10) + "px")
-                //.style("top", (d3.event.pageY - 28) + "px");
+            //.style("left", (d3.event.pageX + 10) + "px")
+            //.style("top", (d3.event.pageY - 28) + "px");
         }
         /**
                 // Add Legend

@@ -1,3 +1,77 @@
+
+const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8RZbr9wf1Z1U8r2ThApsH_QxPGoWODapgxsjUjs1TLKRKtDEZznKyPIZjvwhomePhXIpmapUaK9K5/pub?output=csv';
+
+function fetchCSVAsJSON(csvUrl) {
+    return fetch(csvUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(csvText => {
+            // Parse the CSV into an array of objects
+            const rows = csvText.split('\n').filter(row => row.trim().length > 0); // Filter out empty rows
+            const headers = rows[0].split(',').map(header => header.trim());
+
+            // Convert CSV rows into JSON format
+            const jsonData = rows.slice(1).map(row => {
+                const values = row.split(',').map(value => value.trim());
+                const obj = {};
+                headers.forEach((header, i) => {
+                    obj[header] = values[i];
+                });
+                return obj;
+            });
+
+            return jsonData;
+        })
+        .catch(error => {
+            console.error('Error fetching or parsing CSV:', error);
+            return []; // Return an empty array in case of an error
+        });
+}
+
+function transformImprovedData(data) {
+    // Create the root object
+    const root = {
+        name: "Startup Ecosystem",
+        children: []
+    };
+
+    // Helper function to find or create a node at a specific level
+    function findOrCreateNode(parent, nodeName) {
+        let node = parent.children.find(child => child.name === nodeName);
+        if (!node) {
+            node = {
+                name: nodeName,
+                children: []
+            };
+            parent.children.push(node);
+        }
+        return node;
+    }
+
+    // Iterate through each item in the input data array
+    data.forEach(item => {
+        // Find or create each level of the hierarchy
+        const level1 = findOrCreateNode(root, item.category);
+        const level2 = findOrCreateNode(level1, item.subcategory);
+
+        // Create the leaf node
+        const leaf = {
+            name: item.name,
+            value: Number(item.value),
+            description: item.description
+        };
+
+        // Add the leaf node to level 2
+        level2.children.push(leaf);
+    });
+
+    return root;
+}
+
 // table.js
 
 // Select the table body
@@ -10,7 +84,8 @@ const searchInput = document.getElementById('search-input');
 const tooltip = d3.select("#tooltip");
 
 // Load the external data
-d3.json("data.json").then(data => {
+    // Load the external data
+    fetchCSVAsJSON(csvUrl).then(data => {
     // Function to traverse the hierarchical data and generate table rows using for loops
     function traverse(node, category = '', subcategory = '') {
         if (node.name === 'Startup Ecosystem') {
