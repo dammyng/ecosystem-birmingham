@@ -78,8 +78,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to check if the user is authenticated
-    function isAuthenticated() {
-        return validateToken();
+    async function isAuthenticated() {
+        return await validateToken();
     }
 
     // Function to dynamically load chart.js only if authenticated
@@ -95,19 +95,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // On page load, check if the user is authenticated
-    if (isAuthenticated()) {
-        loginModal.classList.add('hidden');
-        loadChartScript();
-    } else {
-        loginModal.classList.remove('hidden');
-    }
+    (async () => {
+        if (await isAuthenticated()) {
+            loginModal.classList.add('hidden');
+            loadChartScript();
+        } else {
+            loginModal.classList.remove('hidden');
+        }
+    })();
 
     // Parse a date in DD/MM/YYYY format into a JavaScript Date object
-function parseDateString(dateString) {
-    const [day, month, year] = dateString.split("/").map(Number);
-    // JavaScript Date expects the month to be 0-indexed (January is 0, February is 1, etc.)
-    return new Date(year, month - 1, day);
-}
+    function parseDateString(dateString) {
+        const [day, month, year] = dateString.split("/").map(Number);
+        // JavaScript Date expects the month to be 0-indexed (January is 0, February is 1, etc.)
+        return new Date(year, month - 1, day);
+    }
 
     // Handle login click event
     loginButton.addEventListener('click', async () => {
@@ -115,7 +117,7 @@ function parseDateString(dateString) {
         const password = document.getElementById('password').value;
 
         try {
-            
+
             // Fetch CSV data as JSON
             const userList = await fetchCSVAsJSON(accessLink);
 
@@ -127,11 +129,11 @@ function parseDateString(dateString) {
                 const expiryDate = parseDateString(user.limit);
 
                 // Check if the parsed date is valid
-            if (isNaN(expiryDate.getTime())) {
-                console.error("Invalid limit date format in the CSV");
-                loginError.classList.remove('hidden');
-                return;
-            }
+                if (isNaN(expiryDate.getTime())) {
+                    console.error("Invalid limit date format in the CSV");
+                    loginError.classList.remove('hidden');
+                    return;
+                }
                 localStorage.setItem('username', user.name);
                 localStorage.setItem('tokenExpiry', expiryDate.toISOString());
 
@@ -147,26 +149,29 @@ function parseDateString(dateString) {
         }
     });
 
-      // Handle logout click event
-      logoutButton.addEventListener('click', () => {
+    // Handle logout click event
+    logoutButton.addEventListener('click', () => {
         // Clear the token and expiry, show login modal, and hide content
         localStorage.removeItem('token');
         localStorage.removeItem('tokenExpiry');
         content.classList.add('hidden');
         loginModal.classList.remove('hidden');
+        loginModal.classList.add('visible');
     });
 
     // Validate token every 30 minutes
-    setInterval(() => {
-        if (!isAuthenticated()) {
+    setInterval(async () => {
+        if (!(await isAuthenticated())) {
             // Clear the token and expiry, show login modal, and hide content
-            localStorage.removeItem('token');
+            localStorage.removeItem('username');
             localStorage.removeItem('tokenExpiry');
 
             // Hide the content and show the login modal again
             content.classList.add('hidden');
             loginModal.classList.remove('hidden');
+            loginModal.classList.add('visible');
             alert('Session expired. Please log in again.');
         }
     }, 30 * 60 * 1000); // 30 minutes in milliseconds
+
 });
