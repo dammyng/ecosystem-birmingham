@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Startup Ecosystem Partition Chart</title>
-    <meta name="description" content="Visualize Birmingham's startup ecosystem with our dynamic chart. Analyze trends across fintech, AI, health tech, and more." />
+    <meta name="description"
+        content="Visualize Birmingham's startup ecosystem with our dynamic chart. Analyze trends across fintech, AI, health tech, and more." />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
@@ -27,31 +28,164 @@
             margin: 0 auto;
         }
     </style>
-        <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="auth.js"></script>
 
 </head>
 
-<body class="bg-gray-100 text-gray-800  h-screen flex items-center justify-center">
-    <div class="w-full flex">
-
-        <div class="mx-auto p-4 w-4/12 flex justify-center flex-col rotating-bg">
-            <h1 class="text-3xl font-bold text-center mb-6 text-white shadow-md">Birmingham Ecosystem Chart</h1>
-            <div class="flex justify-center space-x-4 mb-4">
-                <a href="table.html"
-                class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-lg">
-                 View Table
-             </a>
+<body class="bg-gray-100 text-gray-800   flex items-center justify-center">
+    <!-- Login Modal -->
+    <div id="loginModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
+            <h2 class="text-2xl font-semibold mb-4">Login</h2>
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">Username</label>
+                <input type="text" id="username"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
             </div>
-            <div class="tooltip justify-center self-center" id="tooltip"></div>
+            <div class="mt-4">
+                <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                <input type="password" id="password"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+            </div>
+            <div class="mt-6">
+                <button id="loginButton"
+                    class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">Login</button>
+            </div>
+            <div id="loginError" class="text-red-600 mt-2 hidden">Invalid credentials. Please try again.</div>
+        </div>
+    </div>
+
+    <div class="w-full flex h-screen" id="content" class="hidden">
+
+        <div class="mx-auto w-4/12 flex flex-col rotating-bg h-screen overflow-y-auto justify-between">
+
+            <header class="sticky top-0 z-50 bg-black w-full justify-between flex  px-5 py-2">
+                <div class="self-center text-gray-100">
+                    <h1 class="font-semibold">Welcome Dami</h1>
+                </div>
+                <div class="self-center text-gray-100 my-auto">
+                    <button id="logoutButton"
+                        class="border-red-200 border-2 text-white py-1 px-4 rounded-md hover:bg-red-700">Logout
+                    </button>
+                </div>
+            </header>
+            
+            <div class="mb-auto">
+
+                <!-- Title Section -->
+                <div class="text-center py-4">
+                    <h1 class="text-3xl font-bold mb-2 text-white shadow-md">Birmingham Ecosystem Chart</h1>
+                    <p class="text-sm text-gray-300">Across Birmingham and the West Midlands, there are over 30
+                        accelerators, incubators, and business support programmes designed to help Tech and Digital
+                        businesses achieve more.</p>
+                </div>
+
+                <div>
+                    <div class="flex justify-center space-x-4 mb-4">
+                        <a href="table.html"
+                            class="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-400 shadow-lg">
+                            View Table
+                        </a>
+                    </div>
+                    <div class="tooltip justify-center self-center" id="tooltip"></div>
+                </div>
+
+
+                <!-- News & Opportunities Section -->
+                <div class="mx-auto w-10/12 py-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center text-white">Latest News & Opportunities</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+
+                        <!-- News Card 1 -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-2">New Accelerator Launched in Birmingham</h3>
+                            <p class="text-gray-700">A new accelerator program has been launched to support early-stage
+                                startups in the AI and FinTech space.</p>
+                            <a href="#" class="mt-4 inline-block text-blue-500 hover:underline">Read More</a>
+                        </div>
+
+                        <!-- News Card 2 -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-2">Digital Health Grant Opportunities</h3>
+                            <p class="text-gray-700">Explore new grant opportunities for health tech startups focusing
+                                on
+                                digital transformation.</p>
+                            <a href="#" class="mt-4 inline-block text-blue-500 hover:underline">Read More</a>
+                        </div>
+
+                        <!-- News Card 3 -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-2">Networking Event: Innovate Birmingham</h3>
+                            <p class="text-gray-700">Join the Innovate Birmingham event to connect with industry leaders
+                                and
+                                peers in the startup community.</p>
+                            <a href="#" class="mt-4 inline-block text-blue-500 hover:underline">Read More</a>
+                        </div>
+
+                        <!-- News Card 3 -->
+                        <div class="bg-white rounded-lg shadow-md p-6">
+                            <h3 class="text-xl font-semibold mb-2">Networking Event: Innovate Birmingham</h3>
+                            <p class="text-gray-700">Join the Innovate Birmingham event to connect with industry leaders
+                                and
+                                peers in the startup community.</p>
+                            <a href="#" class="mt-4 inline-block text-blue-500 hover:underline">Read More</a>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="mx-auto w-10/12 py-8">
+                    <h2 class="text-2xl font-bold mb-4 text-center text-white">Key Facts & Metrics</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
+
+                        <!-- Fact Card 1 -->
+                        <div class="bg-gray-800 rounded-lg shadow-md p-6">
+                            <h3 class="text-lg font-semibold text-yellow-400">30+</h3>
+                            <p class="text-gray-300">Incubators & Accelerators</p>
+                        </div>
+
+                        <!-- Fact Card 2 -->
+                        <div class="bg-gray-800 rounded-lg shadow-md p-6">
+                            <h3 class="text-lg font-semibold text-yellow-400">100+</h3>
+                            <p class="text-gray-300">Tech Startups in Birmingham</p>
+                        </div>
+
+                        <!-- Fact Card 3 -->
+                        <div class="bg-gray-800 rounded-lg shadow-md p-6">
+                            <h3 class="text-lg font-semibold text-yellow-400">50%</h3>
+                            <p class="text-gray-300">Increase in Digital Investments</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+
+
+
+            <!-- Footer Section -->
+            <footer class="fixed sticky bottom-0 bg-gray-900 py-6">
+                <div class="mx-auto text-center">
+                    <p class="text-gray-400">Powered by <span class="text-yellow-400 font-semibold">Leading Lines</span>
+                    </p>
+                    <a href="mailto:hello@leading.com" class="text-yellow-400 hover:underline">hello@leading.com</a>
+                </div>
+            </footer>
+
         </div>
 
         <div class="w-9/12 items-center justify-center h-screen m-auto flex flex-col bg-gray-100">
             <div id="chart" class="w-full m-auto mt-20 h-fit">
             </div>
         </div>
-
     </div>
-    <script src="chart.js"></script>
+
+
 </body>
 
 </html>

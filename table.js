@@ -1,7 +1,7 @@
 
 const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8RZbr9wf1Z1U8r2ThApsH_QxPGoWODapgxsjUjs1TLKRKtDEZznKyPIZjvwhomePhXIpmapUaK9K5/pub?output=csv';
-
 function fetchCSVAsJSON(csvUrl) {
+
     return fetch(csvUrl)
         .then(response => {
             if (!response.ok) {
@@ -33,6 +33,7 @@ function fetchCSVAsJSON(csvUrl) {
 }
 
 function transformImprovedData(data) {
+
     // Create the root object
     const root = {
         name: "Startup Ecosystem",
@@ -68,7 +69,7 @@ function transformImprovedData(data) {
         // Add the leaf node to level 2
         level2.children.push(leaf);
     });
-
+    console.log(root)
     return root;
 }
 
@@ -84,8 +85,9 @@ const searchInput = document.getElementById('search-input');
 const tooltip = d3.select("#tooltip");
 
 // Load the external data
-    // Load the external data
-    fetchCSVAsJSON(csvUrl).then(data => {
+// Load the external data
+fetchCSVAsJSON(csvUrl).then(res => {
+    const data = transformImprovedData(res)
     // Function to traverse the hierarchical data and generate table rows using for loops
     function traverse(node, category = '', subcategory = '') {
         if (node.name === 'Startup Ecosystem') {
@@ -139,7 +141,7 @@ const tooltip = d3.select("#tooltip");
     traverse(data);
 
     // Implement search functionality
-    searchInput.addEventListener('input', function() {
+    searchInput.addEventListener('input', function () {
         const query = this.value.toLowerCase();
         const rows = tableBody.getElementsByTagName('tr');
 

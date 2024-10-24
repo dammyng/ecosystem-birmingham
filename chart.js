@@ -1,40 +1,9 @@
 // chart.js
 
 
-const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8RZbr9wf1Z1U8r2ThApsH_QxPGoWODapgxsjUjs1TLKRKtDEZznKyPIZjvwhomePhXIpmapUaK9K5/pub?output=csv';
-
-function fetchCSVAsJSON(csvUrl) {
-    return fetch(csvUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.text();
-        })
-        .then(csvText => {
-            // Parse the CSV into an array of objects
-            const rows = csvText.split('\n').filter(row => row.trim().length > 0); // Filter out empty rows
-            const headers = rows[0].split(',').map(header => header.trim());
-
-            // Convert CSV rows into JSON format
-            const jsonData = rows.slice(1).map(row => {
-                const values = row.split(',').map(value => value.trim());
-                const obj = {};
-                headers.forEach((header, i) => {
-                    obj[header] = values[i];
-                });
-                return obj;
-            });
-
-            return jsonData;
-        })
-        .catch(error => {
-            console.error('Error fetching or parsing CSV:', error);
-            return []; // Return an empty array in case of an error
-        });
-}
 
 function transformData(data) {
+    console.log(data)
     // Create the root object
     const root = {
         name: "Startup Ecosystem",
@@ -60,16 +29,18 @@ function transformData(data) {
         const level1 = findOrCreateNode(root, item.name || "Startups");
         const level2 = findOrCreateNode(level1, item.children__name || "Investors");
         const level3 = findOrCreateNode(level2, item.children__children__name || "Category");
-        
+
         // Create the leaf node
         const leaf = {
             name: item.children__children__children__name,
             value: Number(item.children__children__children__value),
-            description: item.children__children__children__description.replace(/"/g, "")
+            link: item.children__children__children__link,
+            description: item.children__children__children__description.replace(/"/g, ""),
         };
-
+        console.log(leaf)
         // Add the leaf node to level 3
         level3.children.push(leaf);
+
     });
 
     return root;
@@ -158,7 +129,8 @@ function transformImprovedData(data) {
         const leaf = {
             name: item.name,
             value: Number(item.value),
-            description: item.description
+            link: item.link,
+            description: item.description,
         };
 
         // Add the leaf node to level 2
@@ -167,6 +139,8 @@ function transformImprovedData(data) {
 
     return root;
 }
+
+
 
 // Immediately Invoked Function Expression (IIFE) to avoid polluting the global namespace
 (function () {
@@ -186,14 +160,9 @@ function transformImprovedData(data) {
 
     // Load the external data
     fetchCSVAsJSON(csvUrl).then(res => {
-        console.log('Fetched JSON Data:', res);
-
-        //const data = buildHierarchy(res)
-        //const data = transformData(res)
         const data = transformImprovedData(res)
-        console.log('Fetched as a single object :', data);
 
-       //fetchCSVAsJSON(csvUrl).then
+        //fetchCSVAsJSON(csvUrl).then
         // Utility function to get maximum number of children at any level
         function getMaxChildren(data) {
             let max = 0;
@@ -262,7 +231,7 @@ function transformImprovedData(data) {
             tooltip.transition()
                 .duration(200)
                 .style("opacity", .9);
-            tooltip.html(`<strong>${d.data.name}</strong><br>${d.data.description || ''}`)
+            tooltip.html(`<strong>${d.data.name}</strong><br></br>${d.data.description || ''}`)
             //.style("left", (event.pageX + 10) + "px")
             //.style("top", (event.pageY - 28) + "px");
         }
@@ -280,11 +249,27 @@ function transformImprovedData(data) {
             .style("user-select", "none")
             .selectAll("text")
             .data(root.descendants().slice(1))
-            .join("text")
+            .join("g")
             .attr("dy", "0.35em")
             .attr("fill-opacity", d => +labelVisible(d.current))
             .attr("transform", d => labelTransform(d.current))
-            .text(d => d.data.name);
+            .each(function (d) {
+                if (d.data.link) {
+                    const currentGroup = d3.select(this);
+                    currentGroup.append("a")
+                        .attr("xlink:href", d.data.link)
+                        .attr("pointer-events", "auto")
+                        .attr("target", "_blank")
+                        .attr("dy", "0.35em")
+                        .append("text")
+                        .text(d => d.data.name);
+                } else {
+                    const currentGroup = d3.select(this);
+                    currentGroup.append("text")
+                        .text(d => d.data.name);
+                }
+            })
+
 
         // Add parent circle for zooming out
         const parent = svg.append("circle")
@@ -308,32 +293,7 @@ function transformImprovedData(data) {
             //.style("left", (d3.event.pageX + 10) + "px")
             //.style("top", (d3.event.pageY - 28) + "px");
         }
-        /**
-                // Add Legend
-                const legend = svg.append("g")
-                    .attr("transform", `translate(${radius * 1.2}, ${-radius})`);
-        
-                const uniqueGroups = Array.from(new Set(getAllGroups(data)));
-        
-                const legendItems = legend.selectAll(".legend")
-                    .data(uniqueGroups)
-                    .enter().append("g")
-                    .attr("class", "legend")
-                    .attr("transform", (d, i) => `translate(0, ${i * 20})`);
-        
-                legendItems.append("rect")
-                    .attr("x", 0)
-                    .attr("y", 0)
-                    .attr("width", 18)
-                    .attr("height", 18)
-                    .attr("fill", d => color(d));
-        
-                legendItems.append("text")
-                    .attr("x", 24)
-                    .attr("y", 9)
-                    .attr("dy", "0.35em")
-                    .text(d => d);
-         */
+
         // Utility function to extract unique groups
         function getAllGroups(data) {
             const groups = [];
@@ -351,40 +311,6 @@ function transformImprovedData(data) {
             return groups;
         }
 
-        // Add Sorting Buttons Event Listeners
-        d3.select("#sort-name").on("click", () => {
-            sortChart((a, b) => d3.ascending(a.data.name, b.data.name));
-        });
-
-        d3.select("#sort-value").on("click", () => {
-            sortChart((a, b) => b.value - a.value);
-        });
-
-        function sortChart(comparator) {
-            hierarchyData.sort(comparator);
-            root = d3.partition()
-                .size([2 * Math.PI, hierarchyData.height + 1])
-                (hierarchyData);
-            root.each(d => d.current = d);
-
-            // Re-bind data to paths
-            path.data(root.descendants().slice(1))
-                .transition()
-                .duration(750)
-                .attrTween("d", d => () => arc(d.current));
-
-            // Re-bind data to labels
-            label.data(root.descendants().slice(1))
-                .transition()
-                .duration(750)
-                .attrTween("transform", d => () => labelTransform(d.current))
-                .attr("fill-opacity", d => +labelVisible(d.current));
-
-            // Update the legend colors if necessary
-            legend.selectAll("rect")
-                .data(uniqueGroups)
-                .attr("fill", d => color(d));
-        }
 
         // Handle zoom on click
         function clicked(event, p) {
