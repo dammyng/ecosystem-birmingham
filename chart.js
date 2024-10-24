@@ -231,7 +231,7 @@ function transformImprovedData(data) {
             tooltip.transition()
                 .duration(200)
                 .style("opacity", .9);
-            tooltip.html(`<strong>${d.data.name}</strong><br></br>${d.data.description || ''}`)
+            tooltip.html(`<strong>${d.data.name}</strong></br>${d.data.description || ''}`)
             //.style("left", (event.pageX + 10) + "px")
             //.style("top", (event.pageY - 28) + "px");
         }

@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Check if the user exists in the fetched list and verify the token expiry date with the limit field
             const user = userList.find(u => u.name === storedUsername);
 
-            if (user && new Date(user.limit) >= now) {
+            if (user && parseDateString(user.limit) >= now) {
                 return true;
             }
 
@@ -79,8 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to check if the user is authenticated
     async function isAuthenticated() {
-        return await validateToken();
+        validateToken().then(res => {
+            if (res) {
+                loginModal.classList.add('hidden');
+                loadChartScript();
+            } else {
+                loginModal.classList.remove('hidden');
+            }
+        })
     }
+    isAuthenticated()
 
     // Function to dynamically load chart.js only if authenticated
     function loadChartScript() {
@@ -94,15 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(script);
     }
 
-    // On page load, check if the user is authenticated
-    (async () => {
-        if (await isAuthenticated()) {
-            loginModal.classList.add('hidden');
-            loadChartScript();
-        } else {
-            loginModal.classList.remove('hidden');
-        }
-    })();
 
     // Parse a date in DD/MM/YYYY format into a JavaScript Date object
     function parseDateString(dateString) {
@@ -170,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
             content.classList.add('hidden');
             loginModal.classList.remove('hidden');
             loginModal.classList.add('visible');
-            alert('Session expired. Please log in again.');
         }
     }, 30 * 60 * 1000); // 30 minutes in milliseconds
 
